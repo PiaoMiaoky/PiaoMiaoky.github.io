@@ -1,10 +1,10 @@
-# Site settings
-title: PiaoMiao Blog
-SEOTitle: PiaoMiao的博客 | PiaoMiao Blog
+﻿# Site settings
+title: PiaoMiaoky Blog
+SEOTitle: PiaoMiaoky 的博客 | PiaoMiaoky Blog
 header-img: img/home-bg.jpg
-email: PiaoMiao@gmail.com
-description: "关于前端与设计、黑客与画家 | 飘渺，Web & Mobile Lover，Software Engineer，UX Designer | 这里是 @PiaoMiao 的个人博客，与你一起发现更大的世界。"
-keyword: "飘渺, PiaoMiao, 飘渺云月, @PiaoMiao, 飘渺的博客, PiaoMiao Blog, 博客, 个人网站, 互联网, Web,设计"
+email: PiaoMiaoky@gmail.com
+description: "关于前端与设计、黑客与画家 | 飘渺，Web & Mobile Lover，Software Engineer，UX Designer | 这里是 @PiaoMiaoky 的个人博客，与你一起发现更大的世界。"
+keyword: "飘渺, PiaoMiaoky, 飘渺云月, @PiaoMiaoky, 飘渺的博客, PiaoMiaoky Blog, 博客, 个人网站, 互联网, Web,设计"
 url: "http://PiaoMiaoky.github.io"              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
 
@@ -12,11 +12,11 @@ baseurl: ""                             # for example, '/blog' if your blog host
 
 # SNS settings
 RSS: false
-weibo_username:     PiaoMiao
-zhihu_username:     PiaoMiao
-github_username:    PiaoMiao
-twitter_username:   PiaoMiao
-#facebook_username:  PiaoMiao
+weibo_username:     PiaoMiaoky 
+zhihu_username:     PiaoMiaoky 
+github_username:    PiaoMiaoky 
+twitter_username:   PiaoMiaoky 
+#facebook_username:  PiaoMiaoky 
 # linkedin_username:  firstname-lastname-idxxxx
 
 
