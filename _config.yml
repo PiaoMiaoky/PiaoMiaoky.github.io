@@ -12,8 +12,8 @@ baseurl: ""                             # for example, '/blog' if your blog host
 
 # SNS settings
 RSS: false
-weibo_username:     PiaoMiaoky 
-zhihu_username:     PiaoMiaoky 
+weibo_username:     飘渺云月
+zhihu_username:     飘渺
 github_username:    PiaoMiaoky 
 twitter_username:   PiaoMiaoky 
 #facebook_username:  PiaoMiaoky 
@@ -48,7 +48,7 @@ kramdown:
 
 
 # Disqus settings
-disqus_username: PiaoMiao
+disqus_username: PiaoMiaoky
 
 # Netease setttings
 netease_comment: false
@@ -61,14 +61,14 @@ netease_comment: false
 
 # Google Analytics
 ga_track_id: 'UA-49627206-1'            # Format: UA-xxxxxx-xx
-ga_domain: huangxuan.me
+ga_domain: 
 
 
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
 sidebar-about-description: "写写代码，做做设计，<br>离开世界之前，一切都是过程"
-sidebar-avatar: /img/avatar-hux.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
+sidebar-avatar: /img/avatar-PiaoMiao.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
 
@@ -87,8 +87,8 @@ service-worker: true
 # Friends
 friends: [
     {
-    #     title: "Su",
-    #     href: "http://su.gallery/"
+    #     title: "summerzk's Blog",
+    #     href: "http://summerzk.github.io/"
     # },{
         title: "乱序",
         href: "http://mida.re/"
