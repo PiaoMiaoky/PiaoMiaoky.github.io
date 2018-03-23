@@ -1,0 +1,22 @@
+---
+layout:       post
+title:        "一次完整的HTTP请求过程"
+subtitle:     "Upgrading Ele.me to Progressive Web App"
+date:         2018-03-23 02:15:00
+author:       "PiaoMiaoky"
+header-img:   "img/post-bg-alitrip.jpg"
+header-mask:  0.3
+catalog:      true
+multilingual: true
+tags:
+    - HTTP协议
+    - JAVA
+    - TCP/IP
+    - 服务器
+---
+>本篇为该系列的第一篇 —— 一次完整的HTTP请求过程，让我们理解HTTP的一个完整的请求。
+
+## 前言
+
+为了更好地理解HTTP请求的全过程，并且为后面自己手写一个HTTP服务器做一个铺垫，因此准备理一下思路，
+复习一次完整的HTTP请求都会有哪些动作和响应:
