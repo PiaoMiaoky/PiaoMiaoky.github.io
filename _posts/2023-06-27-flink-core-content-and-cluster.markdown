@@ -7,23 +7,9 @@ header-img: "img/post-bg-miui6.jpg"
 tags:
     - Flink
     - 流式计算
----
-## Apache Flink核心特性
-1. 统一数据处理组件栈,处理不同类型的数据需求(batch,stream,Machine Learning,graph)
-<br>![img](/img/in-post/post-flink/img_2.png)
-2. 支持事件实践,接入时间,处理时间等时间概念
-<br>![img](/img/in-post/post-flink/img.png)
-3. 基于轻量级分布式快照(snapshot)实现容错
-<br>![img](/img/in-post/post-flink/img_1.png)
-4. 支持状态计算、灵活的state-backend(HDFS,内存,RocksDB)
-<br>![img](/img/in-post/post-flink/img_3.png)
-5. 支持高度灵活的窗口(Window)操作
-<br>![img](/img/in-post/post-flink/img_4.png)
-6. 带反压的连续流模型
-<br>![img](/img/in-post/post-flink/img_5.png)
-7. 基于JVM实现独立的内存管理
-<br>![img](/img/in-post/post-flink/img_6.png)
+    - Flink部署与应用
 
+---
 
 ## Apache Flink集群架构、部署模式
 1. 集群架构组成

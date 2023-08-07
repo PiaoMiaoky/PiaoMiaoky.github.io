@@ -6,6 +6,7 @@ author:     "kevinkang"
 header-img: "img/post-bg-miui6.jpg"
 tags:
     - Flink
+    - Flink部署与应用
 ---
 ## Standalone集群
 <br>![img](/img/in-post/post-flink/img_23.png)
