@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "流式计算以及Flink技术的关键点"
+title:      "Flink适用场景介绍"
 date:       2023-06-27 01:51:00
 author:     "kevinkang"
 header-img: "img/post-bg-miui6.jpg"

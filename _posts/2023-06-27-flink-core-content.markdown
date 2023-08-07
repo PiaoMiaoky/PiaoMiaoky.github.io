@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "流式计算以及Flink技术的关键点"
+title:      "Flink的核心特性、集群架构"
 date:       2023-06-27 01:51:00
 author:     "kevinkang"
 header-img: "img/post-bg-miui6.jpg"
@@ -99,7 +99,7 @@ tags:
 2. 根据程序main()方法执行在Client还是JobManager
 
 #### Session Mode
-- 共享JobManager和TaskManager,所有体检的Job都在一个Runtime中运行
+- 共享JobManager和TaskManager,所有提交的Job都在一个Runtime中运行
 #### Per-Job Mode
 - 独享JobManager与TaskManager,好比为每个Job单独启动一个Runtime
 #### Application Mode(1.11版本提出)
