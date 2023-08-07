@@ -5,9 +5,7 @@ date:       2023-06-27 01:51:00
 author:     "kevinkang"
 header-img: "img/post-bg-miui6.jpg"
 tags:
-    - 知乎
-    - MIUI
-    - Android
+    - Flink
 ---
 ## Apache Flink介绍
 ### 大数据处理计算模式

@@ -5,9 +5,8 @@ date:       2023-06-27 01:51:00
 author:     "kevinkang"
 header-img: "img/post-bg-miui6.jpg"
 tags:
-    - 知乎
-    - MIUI
-    - Android
+    - Flink
+    - 流式计算
 ---
 ## Apache Flink核心特性
 1. 统一数据处理组件栈,处理不同类型的数据需求(batch,stream,Machine Learning,graph)

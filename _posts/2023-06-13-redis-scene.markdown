@@ -5,9 +5,8 @@ date:       2023-06-27 01:51:00
 author:     "kevinkang"
 header-img: "img/post-bg-miui6.jpg"
 tags:
-    - 知乎
-    - MIUI
-    - Android
+    - Flink
+    - 流式计算
 ---
 
 ## 流式计算以及Flink技术的关键点
