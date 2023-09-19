@@ -46,3 +46,22 @@ tags:
     - 更新当前算子里面的时间，29是前面事件产生的waterMark所更新的时间
     - 29会随着waterMark进入进行更新
     - w(17)如果已经在map(2)这个operator里执行完成后, 会把operator里面的时间进行一次update, 这时候operator时间被更新为17
+
+
+# Watermark 与 Window 之间的关系
+<br>![img](/img/in-post/post-flink/img_69.png)
+- Watermark in Windowed Grouped Aggregation with Append Mode
+
+<br>![img](/img/in-post/post-flink/img_69.png)
+- Watermark in Windowed Grouped Aggregation with Update Mode
+
+# Watermark 使用总结
+<br>![img](/img/in-post/post-flink/img_70.png)
+- Watermark = Max EventTime – Late Threshold
+- Late Threshold 越高，数据处理延时越高
+- 启发式更新
+- 解决一定范围内的乱序事件
+- 窗口触发条件：Current Watermark > Window EndTime
+- Watermark 的主要目的是告诉窗口不再会有比当前 Watermark 更晚的数据到达
+- Idel Watermark 仅会发生在顺序事件中
+
