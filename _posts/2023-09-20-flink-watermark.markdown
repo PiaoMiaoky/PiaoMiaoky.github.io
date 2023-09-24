@@ -1,12 +1,13 @@
 ---
 layout:     post
-title:      "Flink中时间概念"
+title:      "Flink eventTime & Watermark"
 date:       2023-09-19 23:39:00
 author:     "kevinkang"
 header-img: "img/post-bg-miui6.jpg"
 tags:
     - Flink
     - eventTime
+    - waterMark
     - processingTime
 ---
 # 基于eventTime处理数据
