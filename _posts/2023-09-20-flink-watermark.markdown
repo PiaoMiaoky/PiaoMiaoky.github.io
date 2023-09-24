@@ -65,3 +65,173 @@ tags:
 - Watermark 的主要目的是告诉窗口不再会有比当前 Watermark 更晚的数据到达
 - Idel Watermark 仅会发生在顺序事件中
 
+# Watermark 的生成方式
+- Two Styles of Watermark Generation
+  - Periodic Watermarks: Based on Event Time
+    - 最大的 event time - 固定时间延迟，产生waterMark
+  - Punctuated Watermarks: Based on something in the event stream
+    - 事件流中通过固定的信息，生成waterMark
+
+## Timestamp Assign 与 Watermark Generate
+```java
+// @Deprecated from 1.11
+public SingleOutputStreamOperator<T> assignTimestampsAndWatermarks(AssignerWithPunctuatedWatermarks<T> timestampAndWatermarkAssigner)
+public SingleOutputStreamOperator<T> assignTimestampsAndWatermarks(AssignerWithPeriodicWatermarks<T> timestampAndWatermarkAssigner)
+
+// Add From 1.11
+public SingleOutputStreamOperator<T> assignTimestampsAndWatermarks(WatermarkStrategy<T> watermarkStrategy)
+```
+## flink 1.11 版本之前
+```java
+// @Deprecated from 1.11
+StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
+DataStream<MyEvent> stream = env.readFile(
+        myFormat, myFilePath, FileProcessingMode.PROCESS_CONTINUOUSLY, 100,
+        FilePathFilter.createDefaultFilter(), typeInfo);
+
+// Timestamp与waterMark设定
+DataStream<MyEvent> withTimestampsAndWatermarks = stream
+        .filter( event -> event.severity() == WARNING )
+        .assignTimestampsAndWatermarks(new BoundedOutOfOrdernessGenerator());
+
+withTimestampsAndWatermarks
+        .keyBy( (event) -> event.getGroup() )
+        .timeWindow(Time.seconds(10))
+        .reduce( (a, b) -> a.add(b) )
+        .addSink(...);
+```
+
+### PeriodicWatermarks 定义
+<br>![img](/img/in-post/post-flink/img_71.png)
+
+### PunctuatedWatermarks 定义
+<br>![img](/img/in-post/post-flink/img_72.png)
+- 通过事件中携带的waterMark的标签确定是否生成
+
+### Source Functions with Timestamps and Watermarks
+- 直接在Source Functions 中生成event time 和 waterMark，传递到SourceContext，携带到Flink中，不需要在DataStream API中生成
+- (大多数情况：通过前面两种方式，在DataStream API中生成)
+```java
+@Override
+public void run(SourceContext<MyType> ctx)throws Exception{
+        while(/* condition */){
+            MyType next=getNext();
+            ctx.collectWithTimestamp(next,next.getEventTimestamp());
+            if(next.hasWatermarkTime()){
+                ctx.emitWatermark(new Watermark(next.getWatermarkTime()));
+            }
+        }
+}
+```
+
+## flink 1.11版本之后 引入Watermark Strategies 介绍
+- 希望把1.11版本之前waterMark的两种生成策略进行统一
+
+```java
+public interface WatermarkStrategy<T> extends TimestampAssignerSupplier<T>, WatermarkGeneratorSupplier<T>{
+    /**
+     * Instantiates a {@link TimestampAssigner} for assigning timestamps according to this
+     * strategy.
+     */
+    @Override
+    TimestampAssigner<T> createTimestampAssigner(TimestampAssignerSupplier.Context context);
+    /**
+     * Instantiates a WatermarkGenerator that generates watermarks according to this strategy.
+     */
+    @Override
+    WatermarkGenerator<T> createWatermarkGenerator(WatermarkGeneratorSupplier.Context context);
+}
+```
+
+### Using Watermark Strategies
+```java
+StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
+
+DataStream<MyEvent> stream = env.readFile(
+        myFormat, myFilePath, FileProcessingMode.PROCESS_CONTINUOUSLY, 100,
+        FilePathFilter.createDefaultFilter(), typeInfo);
+
+// timeStamp 与 waterMark 设定
+DataStream<MyEvent> withTimestampsAndWatermarks = stream
+        .filter( event -> event.severity() == WARNING )
+        .assignTimestampsAndWatermarks(WatermarkStrategy
+        .<Tuple2<Long, String>>forBoundedOutOfOrderness(Duration.ofSeconds(20))
+        .withTimestampAssigner((event, timestamp) -> event.f0));
+
+withTimestampsAndWatermarks
+        .keyBy( (event) -> event.getGroup() )
+        .timeWindow(Time.seconds(10))
+        .reduce( (a, b) -> a.add(b) )
+        .addSink(...);
+```
+
+### Watermark Strategies and the Kafka Connector
+```java
+// 在数据源连接器直接指定
+FlinkKafkaConsumer<MyType> kafkaSource = new FlinkKafkaConsumer<>("myTopic",
+        schema, props);
+        kafkaSource.assignTimestampsAndWatermarks(
+        WatermarkStrategy.forBoundedOutOfOrderness(Duration.ofSeconds(20)));
+        
+DataStream<MyType> stream = env.addSource(kafkaSource);
+```
+
+### Writing WatermarkGenerators
+```java
+public interface WatermarkGenerator<T> {
+    /**
+     * Called for every event, allows the watermark generator to examine and remember the
+     * event timestamps, or to emit a watermark based on the event itself.
+     */
+    void onEvent(T event, long eventTimestamp, WatermarkOutput output);
+    /**
+     * Called periodically(周期), and might emit a new watermark, or not.
+     *
+     * <p>The interval in which this method is called and Watermarks are generated
+     * depends on {@link ExecutionConfig#getAutoWatermarkInterval()}.
+     */
+    void onPeriodicEmit(WatermarkOutput output);
+}
+```
+
+### Periodic WatermarkGenerator
+```java
+public class BoundedOutOfOrdernessGenerator implements WatermarkGenerator<MyEvent> {
+    private final long maxOutOfOrderness = 3500; // 3.5 seconds
+    private long currentMaxTimestamp;
+    @Override
+    public void onEvent(MyEvent event, long eventTimestamp, WatermarkOutput output) {
+        currentMaxTimestamp = Math.max(currentMaxTimestamp, eventTimestamp);
+    }
+    @Override
+    public void onPeriodicEmit(WatermarkOutput output) {
+        // emit the watermark as current highest timestamp minus the out-of-orderness bound
+        output.emitWatermark(new Watermark(currentMaxTimestamp - maxOutOfOrderness - 1));
+    } 
+}
+```
+
+### Punctuated WatermarkGenerator
+```java
+public class PunctuatedAssigner implements WatermarkGenerator<MyEvent> {
+    @Override
+    public void onEvent(MyEvent event, long eventTimestamp, WatermarkOutput output) {
+        if (event.hasWatermarkMarker()) {
+            output.emitWatermark(new Watermark(event.getWatermarkTimestamp()));
+        } }
+    @Override
+    public void onPeriodicEmit(WatermarkOutput output) {
+    // don't need to do anything because we emit in reaction to events above
+    } 
+}
+```
+
+# Watermark 总结
+- (Un)comfortably bounded by fixed delay (固定延迟的边界)
+  - too slow: results are delayed 
+  - too fast: some data is late
+- Heuristic(启发式)
+  - allow windows to produce results as soon as meaningfully possible, and then continue
+    with updates during the allowed lateness interval(允许windows尽快产生有意义的结果，然后继续 在允许的延迟间隔内进行更新)
